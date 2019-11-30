@@ -12,45 +12,45 @@ const axiosGitHubGraphQL = axios.create({
   },
 });
 
+const GET_ORGANIZATION = `{
+  organization(login: "the-road-to-react") {
+    name
+    url
+  }
+}`
+
 class App extends Component {
   state = {
     path: 'the-road-to-learn-react/the-road-to-learn-react',
-    organization: null,
-    errors: null,
+  }
+
+  //class methods
+  componentDidMount() {
+    this.onFetchFromGitHub();
+  }
+  onChange = event => {
+    this.setState({ path: event.target.value });
+  };
+  onSubmit = event => {
+    event.preventDefault();
+  };
+  onFetchFromGitHub = () => {
+    axiosGitHubGraphQL.post('', { query: GET_ORGANIZATION }).then(result => console.log(result));
   };
 
   render() {
-    const { path, organization, errors } = this.state;
-
+    const { path } = this.state
     return (
       <div>
         <h1>{TITLE}</h1>
-
         <form onSubmit={this.onSubmit}>
-          <label htmlFor="url">
-            Show open issues for https://github.com/
-          </label>
-          <input
-            id="url"
-            type="text"
-            value={path}
-            onChange={this.onChange}
-            style={{ width: '300px' }}
-          />
+          <label htmlFor="url">Show open issues for https://github.com/</label>
+          <input id="url" type="text" onChange={this.onChange} style={{ width: '300px' }} />
           <button type="submit">Search</button>
         </form>
-
-        <hr />
-
-        {organization ? (
-          <Organization organization={organization} errors={errors} />
-        ) : (
-            <p>No information yet ...</p>
-          )}
       </div>
     );
   }
 }
-
 
 export default App;
